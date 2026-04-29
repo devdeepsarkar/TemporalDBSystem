@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<TemporalDatabaseConfig
+        xmlns="http://www.example.com/temporaldb"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.example.com/temporaldb temporaldb_config.xsd"
+        version="1.0">
+
+    <!-- GLOBAL SETTINGS -->
+
+    <GlobalSettings
+            timeGranularity="DAY"
+            defaultTemporalType="VALID_TIME"
+            enforceContainment="true"
+            defaultAllowOverlap="false"/>
+
+
+    <!-- TEMPORAL POLICIES -->
+
+    <TemporalPolicies>
+
+        <Policy
+                name="ValidNoOverlap"
+                temporalType="VALID_TIME"
+                allowOverlap="false"
+                trackTransactionTime="false"/>
+
+    </TemporalPolicies>
+
+
+    <!-- ENTITY DEFINITIONS (TEMPORAL ONLY + MAPPING KEYS) -->
+
+    <Entities>
+
+        <!-- EMPLOYEE -->
+
+        <Entity name="Employee" temporal="true" policy="ValidNoOverlap">
+
+            <PrimaryKey>
+                <!-- Mapping key -->
+                <KeyAttribute name="ssn" type="STRING"/>
+            </PrimaryKey>
+
+            <Attributes>
+
+                <!-- Temporal attributes only -->
+                <Attribute name="salary" type="FLOAT" temporal="true"/>
+                <Attribute name="dno" type="INTEGER" temporal="true"/>
+                <Attribute name="super_ssn" type="STRING" temporal="true"/>
+
+            </Attributes>
+
+        </Entity>
+
+
+        <!-- DEPARTMENT -->
+
+        <Entity name="Department" temporal="true" policy="ValidNoOverlap">
+
+            <PrimaryKey>
+                <!-- Mapping key -->
+                <KeyAttribute name="dnumber" type="INTEGER"/>
+            </PrimaryKey>
+
+            <Attributes>
+
+                <!-- Temporal attribute -->
+                <Attribute name="mgr_ssn" type="STRING" temporal="true"/>
+
+            </Attributes>
+
+        </Entity>
+
+
+        <!-- WORKS_ON -->
+
+        <Entity name="works_on" temporal="true" policy="ValidNoOverlap">
+
+            <PrimaryKey>
+                <!-- Mapping key -->
+                <KeyAttribute name="essn" type="STRING"/>
+                <KeyAttribute name="pno" type="INTEGER"/>
+            </PrimaryKey>
+
+            <Attributes>
+
+                <!-- Temporal attribute -->
+                <Attribute name="hours" type="FLOAT" temporal="true"/>
+
+            </Attributes>
+
+        </Entity>
+
+    </Entities>
+
+
+    <!-- RELATIONSHIPS -->
+
+    <!-- <Relationships>
+
+        WORKS_ON (Temporal relationship)
+
+        <Relationship
+                name="WorksOn"
+                source="Employee"
+                target="Project"
+                cardinality="ManyToMany"
+                temporal="true"
+                allowOverlap="false"/>
+
+
+        WORKS_FOR
+
+        <Relationship
+                name="WorksFor"
+                source="Employee"
+                target="Department"
+                cardinality="ManyToOne"
+                temporal="true"
+                allowOverlap="false"/>
+
+
+        MANAGES
+
+        <Relationship
+                name="Manages"
+                source="Employee"
+                target="Department"
+                cardinality="OneToOne"
+                temporal="true"
+                allowOverlap="false"/>
+
+    </Relationships> -->
+
+
+    <!-- TIME DIMENSION -->
+
+    <TimeDimension
+            validStartField="valid_from"
+            validEndField="valid_to"
+            transactionField="tx_time"/>
+
+</TemporalDatabaseConfig>

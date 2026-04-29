@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<TemporalDatabaseConfig
+        xmlns="http://www.example.com/temporaldb"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.example.com/temporaldb temporaldb_config.xsd"
+        version="1.0">
+
+    <!-- GLOBAL SETTINGS -->
+
+    <GlobalSettings
+            timeGranularity="DAY"
+            defaultTemporalType="VALID_TIME"
+            enforceContainment="true"
+            defaultAllowOverlap="false"/>
+
+
+    <!-- TEMPORAL POLICIES -->
+
+    <TemporalPolicies>
+
+        <Policy
+                name="ValidNoOverlap"
+                temporalType="VALID_TIME"
+                allowOverlap="false"
+                trackTransactionTime="false"/>
+
+        <Policy
+                name="BiTemporalStrict"
+                temporalType="BI_TEMPORAL"
+                allowOverlap="false"
+                trackTransactionTime="true"/>
+
+    </TemporalPolicies>
+
+
+    <!-- ENTITY DEFINITIONS-->
+
+    <Entities>
+
+        <Entity
+                name="GenericEntity"
+                temporal="true"
+                policy="ValidNoOverlap">
+
+            <PrimaryKey>
+                <KeyAttribute name="id" type="INTEGER"/>
+            </PrimaryKey>
+
+            <Attributes>
+
+                <!-- Non-temporal attribute -->
+                <Attribute
+                        name="staticAttribute"
+                        type="STRING"
+                        temporal="false"/>
+
+                <!-- Attribute-level temporal -->
+                <Attribute
+                        name="temporalAttribute"
+                        type="STRING"
+                        temporal="true"
+                        allowOverlap="false"
+                        inheritEntityTemporal="true"/>
+
+            </Attributes>
+
+        </Entity>
+
+    </Entities>
+
+
+    <!-- RELATIONSHIP DEFINITIONS-->
+
+    <!-- <Relationships>
+
+        <Relationship
+                name="GenericRelation"
+                source="EntityA"
+                target="EntityB"
+                cardinality="ManyToOne"
+                temporal="true"
+                allowOverlap="false"/>
+
+    </Relationships> -->
+
+
+    <!-- TIME DIMENSION CONFIGURATION -->
+
+    <TimeDimension
+            validStartField="valid_from"
+            validEndField="valid_to"
+            transactionField="tx_time"/>
+
+    
+
+</TemporalDatabaseConfig>
