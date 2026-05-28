@@ -3,7 +3,7 @@
 This document explains the architecture and workflow of the Java-based Temporal Database Schema Generator.
 
 ## 1. High-Level Architecture
-The goal of the Java Generator is to read the configuration defined in `Companydb_Schema_XML` and automatically produce a valid MySQL relational schema (`schema.sql`) that supports temporal tracking via history tables.
+The goal of the Java Generator is to read the configuration defined in `companydb_schema.xml` and automatically produce a valid MySQL relational schema (`schema.sql`) that supports temporal tracking via history tables.
 
 The system is built on **JAXB (Jakarta XML Binding)**, which is a Java standard for mapping XML elements directly into Java Objects (POJOs). This allows the application to interact with the XML structure using strongly-typed Java code rather than manually traversing XML nodes.
 
@@ -18,7 +18,7 @@ The execution pipeline consists of three phases:
 
 1. **Initialization:** The user runs the packaged JAR file (`java -jar schema-generator-1.0.0-jar-with-dependencies.jar`).
 2. **Context Setup:** `GenerateSchema.main()` creates a `JAXBContext` tailored to the `TemporalDatabaseConfig` class.
-3. **XML Reading:** The `Unmarshaller` reads `Companydb_Schema_XML`. It matches XML tags to Java fields based on annotations (e.g., `@XmlElement`, `@XmlAttribute`).
+3. **XML Reading:** The `Unmarshaller` reads `companydb_schema.xml`. It matches XML tags to Java fields based on annotations (e.g., `@XmlElement`, `@XmlAttribute`).
 4. **Validation:** If the XML is malformed or violates the declared namespace (`http://www.example.com/temporaldb`), the unmarshaller throws an exception.
 5. **Iteration:** For each parsed `Entity`, the script checks if `temporal="true"`.
 6. **SQL Generation:** If temporal, it passes the `Entity` and the global `TimeDimension` configuration to `DdlBuilder.createHistoryTable()`.

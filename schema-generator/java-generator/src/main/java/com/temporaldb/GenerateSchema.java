@@ -9,10 +9,10 @@ import com.temporaldb.util.DdlBuilder;
 public class GenerateSchema {
     public static void main(String[] args) throws Exception {
         // Read XML file. Since we run from java-generator, schema is one level up
-        Path xmlPath = Paths.get("../Companydb_Schema_XML");
+        Path xmlPath = Paths.get("../companydb_schema.xml");
         if (!Files.exists(xmlPath)) {
             // fallback if running from the project root instead
-            xmlPath = Paths.get("Companydb_Schema_XML");
+            xmlPath = Paths.get("companydb_schema.xml");
         }
 
         JAXBContext ctx = JAXBContext.newInstance(TemporalDatabaseConfig.class);
@@ -20,7 +20,7 @@ public class GenerateSchema {
         TemporalDatabaseConfig cfg = (TemporalDatabaseConfig) um.unmarshal(xmlPath.toFile());
 
         StringBuilder ddl = new StringBuilder();
-        ddl.append("-- Auto-generated from Companydb_Schema_XML\n\n");
+        ddl.append("-- Auto-generated from companydb_schema.xml\n\n");
 
         if (cfg.getEntities() != null) {
             for (Entity e : cfg.getEntities()) {
